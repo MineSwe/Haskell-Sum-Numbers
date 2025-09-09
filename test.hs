@@ -1,5 +1,15 @@
 import Data.List
 
+main :: IO()
+main = do
+    listLength <- readLn :: IO Int
+    listInput <- getLine
+    let list = map read (words listInput) :: [Int]
+    print list
+    let averageOfTopHalf = getAverageOfTopHalf listLength list
+    print averageOfTopHalf
+
+
 getAverageOfTopHalf :: Int -> [Int] -> Int
 getAverageOfTopHalf listLength list =
     let sortedList = sortList list
