@@ -1,37 +1,36 @@
 import Data.List
+import qualified Data.Ord
 
 main :: IO()
 main = do
     listLength <- readLn :: IO Int
     listInput <- getLine
     let list = map read (words listInput) :: [Int]
-    print list
-    let averageOfTopHalf = getAverageOfTopHalf listLength list
-    print averageOfTopHalf
+        sumOfTopHalf = getSumOfTopHalf listLength list
+    print sumOfTopHalf
 
-
-getAverageOfTopHalf :: Int -> [Int] -> Int
-getAverageOfTopHalf listLength list =
+getSumOfTopHalf :: Int -> [Int] -> Int
+getSumOfTopHalf listLength list =
     let sortedList = sortList list
-        topHalfList = chopList (listLength `div` 2) sortedList
-        averageOfTopHalf = averageList topHalfList
-    in averageOfTopHalf
+        lengthOfTopHalf = getHalfLengthOfListLength listLength
+        topHalfList = chopList lengthOfTopHalf sortedList
+        sumOfTopHalf = sum topHalfList
+    in sumOfTopHalf
 
 -- Sort list
 sortList :: [Int] -> [Int]
-sortList list =
-    let sortedList = sort list
+sortList list =    -- VSCode complains when using "reverse (sort list)" and autocompletes to this
+    let sortedList = sortBy (Data.Ord.comparing Data.Ord.Down) list
     in sortedList
+
+-- Get length of half a list by length/2 or if odd (length+1)/2
+getHalfLengthOfListLength :: Int -> Int
+getHalfLengthOfListLength listLength =
+    let halfLength = (if odd listLength then (listLength+1) `div` 2 else listLength `div` 2)
+    in halfLength
 
 -- Get top half by listLength / 2
 chopList :: Int -> [Int] -> [Int]
-chopList length list = 
-    let choppedList = drop length list
+chopList length list =
+    let choppedList = take length list
     in choppedList
-
--- Get average by sum or sum+1 and divide by 2 
-averageList :: [Int] -> Int
-averageList list =
-    let sumOfList = sum list
-        averageList = (if odd sumOfList then (sumOfList+1) `div` 2 else sumOfList `div` 2)
-    in averageList
